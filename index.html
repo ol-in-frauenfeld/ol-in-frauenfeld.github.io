@@ -8,6 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="styles.css" rel="stylesheet">
 
     <title>OFF! OL in Frauenfeld.</title>
@@ -18,11 +19,23 @@
     <link rel="manifest" href="/site.webmanifest">
   </head>
   <body>
-    <nav class="navbar sticky-top navbar-light bg-light">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <img src="img/thurgorienta.svg" alt="" width="60" height="37" class="d-inline-block align-text-top">
-        <a class="navbar-brand" href="#"><strong>OFF 2024</strong>
-        </a>
+        <img src="img/thurgorienta.svg" alt="" width="60"  class="navbar-brand d-inline-block align-text-top">
+        <a class="navbar-brand" href="#"><strong>OFF!</strong></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">Aktuelle OFF!</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="past.html">Vergangene OFF!</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
@@ -77,38 +90,9 @@
               <h5 class="card-title"><strong>OFF 2024</strong></h5>
               <h6 class="card-subtitle mb-2 text-muted">OL-Serie 2024</h6>
               <p class="card-text">Eine neue, kleine, aber feine Orientierungslauf-Serie für alle. Einfachste Organisation, aktuelle OL-Karten 1:4000, SportIdent.</p>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/OFF2024.pdf'">Flyer 2024</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/OFF_Strecken_2024.pdf'">Streckendaten</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/OFF_Ablauf.pdf'">Wie geht OFF?</button>
-            </div>
-          </div>      
-        </div>
-        <div class="col-sm">
-          <div class="card m-2" id="OFF1">
-            <div class="card-body">
-              <h5 class="card-title"><strong>OFF1</strong></h5>
-              <h6 class="card-subtitle mb-2 text-muted">Die Freundliche</h6>
-              <p class="card-text">Mittwoch, 20. März 2024, Pfaffenholz</p>
-              <!--<button type="button" class="btn btn-secondary m-1" onclick="location.href='https://forms.gle/itdHg3RgZNmtNBFu6'">Anmeldung</button>-->
-              <!--<button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/KEF6VQJTsYtXjPxE7'">Besammlung</button>-->
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='results/off1.html'">Rangliste</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='http://obasen.orientering.se/winsplits/online/en/default.asp?page=classes&databaseId=95150'">WinSplits</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://www.livelox.com/Events/Show/119304/OFF1-2024'">Livelox</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://flic.kr/s/aHBqjBkqzg'">Fotos</button>
-            </div>
-          </div>      
-        </div>
-        <div class="col-sm">
-          <div class="card m-2" id="OFF2">
-            <div class="card-body">
-              <h5 class="card-title"><strong>OFF2</strong></h5>
-              <h6 class="card-subtitle mb-2 text-muted">Die Wilde</h6>
-              <p class="card-text">Mittwoch, 27. März 2024, Mühletobel</p>
-              <!--<button type="button" class="btn btn-secondary m-1" onclick="location.href='https://forms.gle/3TxbJ26kDDc5Q2fm6'">Anmeldung</button>-->
-              <!--<button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/cxPyEoaLduLmqF4b8'">Besammlung</button>-->
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='results/off2.html'">Rangliste</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='http://obasen.orientering.se/winsplits/online/en/show_event.asp?id=95980'">WinSplits</button>
-              <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://www.livelox.com/Events/Show/120168/OFF2-2024'">Livelox</button>
+              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/flyer/OFF2024.pdf'">Flyer 2024</button>
+              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/flyer/OFF_Strecken_2024.pdf'">Streckendaten</button>
+              <button type="button" class="btn btn-secondary m-1" onclick="location.href='/flyer/OFF_Ablauf.pdf'">Wie geht OFF?</button>
             </div>
           </div>      
         </div>
@@ -116,7 +100,7 @@
           <div class="card m-2" id="OFF3">
             <div class="card-body">
               <h5 class="card-title"><strong>OFF3</strong></h5>
-              <h6 class="card-subtitle mb-2 text-muted">Die Flache</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Die Flache<i class="ms-2 bi-tree-fill"></i></h6>
               <p class="card-text">Mittwoch, 19. Juni 2024, Burgerholz</p>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://forms.gle/xrpXnVYhu5bQuXWz6'">Anmeldung</button>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/KndiSC93o6Y1EBQP9'">Besammlung</button>
@@ -129,7 +113,7 @@
           <div class="card m-2" id="OFF4">
             <div class="card-body">
               <h5 class="card-title"><strong>OFF4</strong></h5>
-              <h6 class="card-subtitle mb-2 text-muted">Die Klassische</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Die Klassische<i class="ms-2 bi-tree-fill"></i></h6>
               <p class="card-text">Mittwoch, 26. Juni 2024, Rüegerholz</p>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://forms.gle/gA435CScqF1mZPWMA'">Anmeldung</button>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/zJgSfhHU5vALDakq8'">Besammlung</button>
@@ -138,14 +122,27 @@
             </div>
           </div>      
         </div>
-        <div class="col-sm mb-5">
+        <div class="col-sm">
           <div class="card m-2" id="OFF5">
             <div class="card-body">
               <h5 class="card-title"><strong>OFF5</strong></h5>
-              <h6 class="card-subtitle mb-2 text-muted">Die Natürliche</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Die Natürliche<i class="ms-2 bi-tree-fill"></i></h6>
               <p class="card-text">Mittwoch, 18. September 2024, Altholz</p>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://forms.gle/7XYC63FDpgS6xuzK8'">Anmeldung</button>
               <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/N25xS7Sh53kJGXGj9'">Besammlung</button>
+              <button type="button" class="btn btn-secondary m-1" disabled>Rangliste</button>
+              <button type="button" class="btn btn-secondary m-1" disabled>Livelox</button>
+            </div>
+          </div>      
+        </div>
+        <div class="col-sm">
+          <div class="card m-2" id="OFF6">
+            <div class="card-body">
+              <h5 class="card-title"><strong>OFF6</strong></h5>
+              <h6 class="card-subtitle mb-2 text-muted">The Spooky One<i class="ms-2 bi-tree-fill"></i><i class="ms-2 bi-houses"></i><i class="ms-2 bi-moon-stars-fill"></i></h6>
+              <p class="card-text">Freitag, 1. November 2024, Försterhaus</p>
+              <button type="button" class="btn btn-secondary m-1" disabled>Anmeldung</button>
+              <button type="button" class="btn btn-secondary m-1" onclick="location.href='https://maps.app.goo.gl/MGCAVzRucYbfGRrU8'">Besammlung</button>
               <button type="button" class="btn btn-secondary m-1" disabled>Rangliste</button>
               <button type="button" class="btn btn-secondary m-1" disabled>Livelox</button>
             </div>
