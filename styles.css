@@ -21,3 +21,8 @@
     display: block;
     margin: auto;
 }
+
+.icon-large {
+    display: inline-block;
+    transform: scale(1.4);
+}
