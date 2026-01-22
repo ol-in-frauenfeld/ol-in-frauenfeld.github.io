@@ -65,9 +65,11 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.min.js"
+    integrity="sha512-tfb8+O0fjpXtICAZ+ycBM0V9maSn5fuzfeAn2TeZoP53KwtW8VGFFOQ3hya6Vr8y6o3UvtbTIUux7BslMYUmlA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.worker.min.js";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.3.136/pdf.worker.min.js";
 
     const validDocs = {
       "OFF.pdf": "Aktueller Flyer",
