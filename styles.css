@@ -27,12 +27,12 @@
     transform: scale(1.4);
 }
 
-.carousel-item {
+.hero-carousel .carousel-item {
     position: relative;
     overflow: hidden;
 }
 
-.carousel-item::after {
+.hero-carousel .carousel-item::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -41,23 +41,23 @@
         radial-gradient(circle at top, rgba(255, 255, 255, 0.35) 0%, rgba(245, 245, 245, 0.35) 45%, rgba(250, 250, 250, 0.4) 100%);
 }
 
-.carousel,
-.carousel-inner,
-.carousel-item {
+.hero-carousel,
+.hero-carousel .carousel-inner,
+.hero-carousel .carousel-item {
     height: 100vh; /* fill the viewport height */
     min-height: 420px; /* keep some presence on smaller screens */
 }
 
-#carouselExampleControls {
+.hero-carousel {
     width: 100vw;
     left: 0;
 }
 
-.carousel-inner {
+.hero-carousel .carousel-inner {
     width: 100%;
 }
 
-.carousel-item img {
+.hero-carousel .carousel-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
