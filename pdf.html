@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="styles.css" rel="stylesheet">
+  <title>OFF! PDF Viewer</title>
+  <style>
+    body {
+      min-height: 100vh;
+      background-color: #f8f9fa;
+    }
+
+    #pdfContainer canvas {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border-radius: 0.25rem;
+    }
+
+    #loader {
+      min-height: 50vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h1 class="h4 mb-1">OFF! PDF Viewer</h1>
+                <p class="text-muted mb-0" id="pdfDescription"></p>
+              </div>
+              <div>
+                <a href="index.html" class="btn btn-outline-secondary btn-sm">Zurück</a>
+              </div>
+            </div>
+            <div id="loader" class="d-flex align-items-center justify-content-center">
+              <div class="text-center">
+                <div class="spinner-border text-secondary mb-3" role="status"></div>
+                <p class="text-muted mb-0">Lade Dokument …</p>
+              </div>
+            </div>
+            <div id="pdfContainer" class="d-none"></div>
+            <div id="pdfError" class="alert alert-warning d-none mt-3" role="alert">
+              Das gewünschte Dokument konnte nicht geladen werden. Bitte versuche es später erneut.
+            </div>
+            <div class="mt-3">
+              <button class="btn btn-secondary me-2" onclick="history.back()">Zurück</button>
+              <a class="btn btn-primary" id="downloadLink" target="_blank" rel="noopener">Download öffnen</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.worker.min.js";
+
+    const validDocs = {
+      "OFF.pdf": "Aktueller Flyer",
+      "OFF_Streckendaten.pdf": "Streckendaten",
+      "OFF_Ablauf.pdf": "Wie geht OFF?"
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+    const descriptionElement = document.getElementById("pdfDescription");
+    const loader = document.getElementById("loader");
+    const pdfContainer = document.getElementById("pdfContainer");
+    const downloadLink = document.getElementById("downloadLink");
+    const pdfError = document.getElementById("pdfError");
+
+    let downloadUrl = null;
+
+    function showError() {
+      loader.classList.add("d-none");
+      pdfContainer.classList.add("d-none");
+      pdfError.classList.remove("d-none");
+      downloadLink.classList.add("disabled");
+    }
+
+    async function renderPdf(arrayBuffer) {
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const containerWidth = pdfContainer.clientWidth || document.body.clientWidth;
+      pdfContainer.innerHTML = "";
+
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = containerWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.height = scaledViewport.height;
+        canvas.width = scaledViewport.width;
+        await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
+        pdfContainer.appendChild(canvas);
+      }
+    }
+
+    async function loadPdf() {
+      if (!(file && Object.prototype.hasOwnProperty.call(validDocs, file))) {
+        showError();
+        return;
+      }
+
+      try {
+        descriptionElement.textContent = validDocs[file];
+        const response = await fetch(`/flyer/${file}?v=${Date.now()}`, {
+          cache: "no-store",
+          headers: { "Accept": "application/pdf" }
+        });
+
+        if (!response.ok) {
+          throw new Error("Download fehlgeschlagen");
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: "application/pdf" });
+        downloadUrl = URL.createObjectURL(blob);
+        downloadLink.href = downloadUrl;
+        downloadLink.download = file;
+
+        await renderPdf(arrayBuffer);
+        loader.classList.add("d-none");
+        pdfContainer.classList.remove("d-none");
+      } catch (error) {
+        console.error(error);
+        showError();
+      }
+    }
+
+    loadPdf();
+
+    window.addEventListener("beforeunload", () => {
+      if (downloadUrl) {
+        URL.revokeObjectURL(downloadUrl);
+      }
+    });
+  </script>
+</body>
+
+</html>
