@@ -145,17 +145,17 @@
     const downloadLink = document.getElementById("downloadLink");
     const pdfError = document.getElementById("pdfError");
 
-    let downloadUrl = null;
+    let viewerUrl = null;
 
     function openPdfInNewTab() {
-      if (!downloadUrl) {
+      if (!viewerUrl) {
         return;
       }
 
-      const newWindow = window.open(downloadUrl, "_blank");
+      const newWindow = window.open(viewerUrl, "_blank");
 
       if (!newWindow) {
-        window.location.href = downloadUrl;
+        window.location.href = viewerUrl;
       }
     }
 
@@ -194,7 +194,9 @@
       }
 
       try {
-        const response = await fetch(`/flyer/${file}?v=${Date.now()}`, {
+        const cacheBuster = Date.now();
+        const requestUrl = `/flyer/${file}?v=${cacheBuster}`;
+        const response = await fetch(requestUrl, {
             cache: "no-store",
             headers: { "Accept": "application/pdf" }
         });
@@ -204,9 +206,8 @@
         }
 
         const arrayBuffer = await response.arrayBuffer();
-        const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-        downloadUrl = URL.createObjectURL(blob);
-        downloadLink.href = downloadUrl;
+        viewerUrl = requestUrl;
+        downloadLink.href = viewerUrl;
         downloadLink.download = file;
 
         await renderPdf(arrayBuffer);
@@ -220,11 +221,6 @@
 
     loadPdf();
 
-    window.addEventListener("beforeunload", () => {
-      if (downloadUrl) {
-        URL.revokeObjectURL(downloadUrl);
-      }
-    });
   </script>
 </body>
 
