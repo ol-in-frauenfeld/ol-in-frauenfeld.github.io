@@ -147,11 +147,19 @@
 
     let downloadUrl = null;
 
-    pdfContainer.addEventListener("click", () => {
-      if (downloadUrl) {
-        window.open(downloadUrl, "_blank", "noopener,noreferrer");
+    function openPdfInNewTab() {
+      if (!downloadUrl) {
+        return;
       }
-    });
+
+      const newWindow = window.open(downloadUrl, "_blank");
+
+      if (!newWindow) {
+        window.location.href = downloadUrl;
+      }
+    }
+
+    pdfContainer.addEventListener("click", openPdfInNewTab);
 
     function showError() {
       loader.classList.add("d-none");
