@@ -146,6 +146,7 @@
     const pdfError = document.getElementById("pdfError");
 
     let viewerUrl = null;
+    let cacheBustValue = null;
 
     function openPdfInNewTab() {
       if (!viewerUrl) {
@@ -194,8 +195,8 @@
       }
 
       try {
-        const cacheBuster = Date.now();
-        const requestUrl = `/flyer/${file}?v=${cacheBuster}`;
+        cacheBustValue = Date.now();
+        const requestUrl = `/flyer/${file}?v=${cacheBustValue}`;
         const response = await fetch(requestUrl, {
             cache: "no-store",
             headers: { "Accept": "application/pdf" }
@@ -206,7 +207,7 @@
         }
 
         const arrayBuffer = await response.arrayBuffer();
-        viewerUrl = requestUrl;
+        viewerUrl = `/flyer/${file}?v=${cacheBustValue}`;
         downloadLink.href = viewerUrl;
         downloadLink.download = file;
 
