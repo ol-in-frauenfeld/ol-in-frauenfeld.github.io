@@ -15,6 +15,10 @@
       background-color: #f8f9fa;
     }
 
+    #pdfContainer {
+      cursor: zoom-in;
+    }
+
     #pdfContainer canvas {
       width: 100%;
       height: auto;
@@ -142,6 +146,12 @@
     const pdfError = document.getElementById("pdfError");
 
     let downloadUrl = null;
+
+    pdfContainer.addEventListener("click", () => {
+      if (downloadUrl) {
+        window.open(downloadUrl, "_blank", "noopener,noreferrer");
+      }
+    });
 
     function showError() {
       loader.classList.add("d-none");
