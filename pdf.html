@@ -142,6 +142,25 @@
     const pdfError = document.getElementById("pdfError");
 
     let downloadUrl = null;
+    let pdfDocument = null;
+    let currentZoom = 1;
+    const MIN_ZOOM = 0.75;
+    const MAX_ZOOM = 2.5;
+    let renderInProgress = false;
+    let pendingZoom = null;
+    let initialPinchDistance = null;
+    let pinchStartZoom = 1;
+
+    function clampZoom(value) {
+      return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
+    }
+
+    function getPinchDistance(touches) {
+      const [touchA, touchB] = touches;
+      const dx = touchA.clientX - touchB.clientX;
+      const dy = touchA.clientY - touchB.clientY;
+      return Math.hypot(dx, dy);
+    }
 
     function showError() {
       loader.classList.add("d-none");
@@ -150,16 +169,29 @@
       downloadLink.classList.add("disabled");
     }
 
-    async function renderPdf(arrayBuffer) {
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    async function renderPdf(requestedZoom = currentZoom) {
+      if (!pdfDocument) {
+        return;
+      }
+
+      const nextZoom = clampZoom(requestedZoom);
+
+      if (renderInProgress) {
+        pendingZoom = nextZoom;
+        return;
+      }
+
+      renderInProgress = true;
+      currentZoom = nextZoom;
+
       const containerWidth = pdfContainer.clientWidth || document.body.clientWidth;
       pdfContainer.innerHTML = "";
 
-      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-        const page = await pdf.getPage(pageNumber);
+      for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
+        const page = await pdfDocument.getPage(pageNumber);
         const viewport = page.getViewport({ scale: 1 });
-        const scale = containerWidth / viewport.width;
-        const scaledViewport = page.getViewport({ scale });
+        const fitWidthScale = containerWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale: fitWidthScale * currentZoom });
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         canvas.height = scaledViewport.height;
@@ -167,6 +199,45 @@
         await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
         pdfContainer.appendChild(canvas);
       }
+
+      renderInProgress = false;
+
+      if (pendingZoom !== null) {
+        const zoomToRender = pendingZoom;
+        pendingZoom = null;
+        renderPdf(zoomToRender);
+      }
+    }
+
+    function attachTouchZoom() {
+      if (!("ontouchstart" in window)) {
+        return;
+      }
+
+      pdfContainer.addEventListener("touchstart", (event) => {
+        if (event.touches.length === 2) {
+          initialPinchDistance = getPinchDistance(event.touches);
+          pinchStartZoom = currentZoom;
+        }
+      }, { passive: false });
+
+      pdfContainer.addEventListener("touchmove", (event) => {
+        if (event.touches.length === 2 && initialPinchDistance) {
+          event.preventDefault();
+          const distance = getPinchDistance(event.touches);
+          const scaleChange = distance / initialPinchDistance;
+          const targetZoom = clampZoom(pinchStartZoom * scaleChange);
+          if (Math.abs(targetZoom - currentZoom) > 0.02) {
+            renderPdf(targetZoom);
+          }
+        }
+      }, { passive: false });
+
+      pdfContainer.addEventListener("touchend", (event) => {
+        if (event.touches.length < 2) {
+          initialPinchDistance = null;
+        }
+      });
     }
 
     async function loadPdf() {
@@ -190,8 +261,9 @@
         downloadUrl = URL.createObjectURL(blob);
         downloadLink.href = downloadUrl;
         downloadLink.download = file;
+        pdfDocument = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-        await renderPdf(arrayBuffer);
+        await renderPdf(1);
         loader.classList.add("d-none");
         pdfContainer.classList.remove("d-none");
       } catch (error) {
@@ -200,6 +272,7 @@
       }
     }
 
+    attachTouchZoom();
     loadPdf();
 
     window.addEventListener("beforeunload", () => {
